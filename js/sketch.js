@@ -1,9 +1,9 @@
-let width = 1000;
-let height = 1000;
+let width;
+let height;
 
-let scl = 10;
+let scl = 25;
 
-let probability = 0.6;
+let probability = 0.25;
 
 let iterations = 1000;
 let iter;
@@ -16,7 +16,7 @@ let grid;
 let openSet, closedSet, path;
 
 let stopPathFinding;
-
+let pauseLoop;
 
 Array.prototype.containsArray = function(elem) {
   let hash = {};
@@ -88,15 +88,18 @@ function drawPath(currentNode) {
   }
   path.push(grid[start[0]][start[1]]);
   
-  let r = frameCount / 100;
-  let g = frameCount / 100;
-  if(g >= 255) g = 0;
+  // let r = frameCount / 100;
+  // let g = frameCount / 100;
+  let r = 0;
+  let g = 0;
+  // if(g >= 255) g = 0;
+  // if(r >= 255) r = 0;
   noFill();
-  // stroke(random(255), random(255), random(255), 10);
+  stroke(random(255)*2, random(255)*2, random(255)*2, 15);
   strokeWeight(scl / 4);
   beginShape();
   for (var i = 0; i < path.length; i++) {
-    stroke(r, g, 0, 10);
+    // stroke(r, g, 0, 10);
     vertex(path[i].x * scl + scl / 2, path[i].y * scl + scl / 2);
     r += 3;
     g += 4;
@@ -128,8 +131,8 @@ function drawGrid() {
 }
 
 function initPathFinding() {
-  rows = height / scl;
-  cols = width / scl;
+  rows = Math.floor(height / scl);
+  cols = Math.floor(width / scl);
 
   start = [rows / 2, cols / 2];
   end = [cols - 1, rows - 1];
@@ -143,9 +146,9 @@ function initPathFinding() {
 function getValidNeighbors(node) {
   let neighborNodes = [];
 
-  let neighbors = [ 1, 1, 1, 
+  let neighbors = [ 0, 1, 0, 
                     1, 0, 1,
-                    1, 1, 1 ];
+                    0, 1, 0 ];
 
   let index = 0;
   for (let y = 1; y >= -1; y--) {
@@ -170,9 +173,8 @@ function getNodeDistance(a, b) {
   return Math.abs(Math.sqrt(Math.pow(a.x - b.x, 2)+ Math.pow(a.y - b.y, 2)));
 }
 
-function setup() {
-  createCanvas(width+1, height+1);
-  background(0);
+function resetSketch() {
+  background(255);
 
   initPathFinding();
   createGrid(width, height);
@@ -180,6 +182,15 @@ function setup() {
   grid[0][0].wall = true;
   grid[end[0]][end[1]].wall = true;
   iter = 0;
+  stopPathFinding = false;
+  pauseLoop = 0;
+}
+
+function setup() {
+  width = windowWidth;
+  height = windowHeight;
+  createCanvas(width+1, height+1);
+  resetSketch();
 }
 
 function draw() {
@@ -234,7 +245,11 @@ function draw() {
       // drawGrid();
     } else {
       console.log("No solution!");
-      stopPathFinding = true;
+      // stopPathFinding = true;
+      if(pauseLoop >= 150) {
+        resetSketch();
+      }
+      pauseLoop++;
     }
   }
 }
