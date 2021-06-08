@@ -95,7 +95,7 @@ function drawPath(currentNode) {
   // if(g >= 255) g = 0;
   // if(r >= 255) r = 0;
   noFill();
-  stroke(random(255)*2, random(255)*2, random(255)*2, 15);
+  stroke(random(255)*2, random(255)*2, random(255)*2, 20);
   strokeWeight(scl / 4);
   beginShape();
   for (var i = 0; i < path.length; i++) {
@@ -134,7 +134,7 @@ function initPathFinding() {
   rows = Math.floor(height / scl);
   cols = Math.floor(width / scl);
 
-  start = [rows / 2, cols / 2];
+  start = [Math.floor(rows / 2), Math.floor(cols / 2)];
   end = [cols - 1, rows - 1];
 
   openSet = [];
